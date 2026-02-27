@@ -2,33 +2,85 @@
 
 A scriptable, pipeable CLI for the Figma REST API. Like `gh` for GitHub, but for Figma.
 
----
+Accepts Figma URLs directly. Outputs JSON by default (pipeable to `jq`). Use `--pretty` for human-readable output.
 
-## Quick Start
+## Install
+
+**Development (via Bun link):**
 
 ```sh
 bun install
-bun run cli auth set <token>
-bun run cli auth status
+bun link
+figma --help
+```
+
+**Compiled binary:**
+
+```sh
+bun run build          # produces ./bin/figma
+./bin/figma --help     # works without Bun installed
+```
+
+Add `./bin/figma` to your PATH for global access.
+
+## Auth
+
+```sh
+figma auth set <token>     # Store a Figma personal access token
+figma auth status          # Verify token and show user info
+figma auth clear           # Remove stored token
 ```
 
 ## Commands
 
-```sh
-figma auth set <token>    # Store a Figma PAT (interactive prompt if no arg)
-figma auth status         # Verify token, show user name and email
-figma auth clear          # Remove stored token
+### File inspection
 
-figma file <url>          # File name, last modified, pages
-figma frames <url>        # List frames in a page, section, or frame
-figma export <url>        # Export frames to PNG/JPG/SVG/PDF
+```sh
+figma file <url>           # File name, last modified, pages
+figma frames <url>         # List frames in a page, section, or frame
+figma versions <url>       # File version history
+```
+
+### Export
+
+```sh
+figma export <url>         # Export frames to image files
+  --format png|jpg|svg|pdf   (default: png)
+  --scale 1|2|3              (default: 1)
+  --out <dir>                (default: ./exports)
+```
+
+### Content
+
+```sh
+figma comments <url>       # List comments on a file or node
+figma comments post <url> --message "..."   # Post a comment
+figma variables <url>      # Dump design token variable collections
+figma components <url>     # List published components and styles
+```
+
+### Team & Projects
+
+```sh
+figma projects <team-id>   # List team projects and their files
 ```
 
 ## Global Flags
 
-- `--pretty` -- human-readable output with color
-- `--json` -- force JSON output (default)
-- `--no-color` -- disable color in pretty mode
+| Flag | Description |
+|------|-------------|
+| `--pretty` | Human-readable output with color |
+| `--json` | Force JSON output (default) |
+| `--no-color` | Disable color output |
+
+## Development
+
+```sh
+bun install
+bun test
+bun run cli -- <args>      # Run without compiling
+bun run build              # Compile to ./bin/figma
+```
 
 ## Project Structure
 
@@ -42,12 +94,4 @@ src/
     api-client.ts     # Typed fetch wrapper for Figma REST API
     output.ts         # JSON/pretty output, error formatting
     frames.ts         # Shared frame discovery logic
-```
-
-## Development
-
-```sh
-bun install
-bun test
-bun run cli --help
 ```

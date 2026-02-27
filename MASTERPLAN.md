@@ -50,7 +50,7 @@ Non-critical but high-value. Order within this phase is flexible.
 
 ## Phase 5: Packaging
 
-- [ ] [T14 - Installable Global Binary](tasks/T14-installable-binary.md)
+- [x] [T14 - Installable Global Binary](tasks/done/T14-installable-binary.md)
 
 ---
 

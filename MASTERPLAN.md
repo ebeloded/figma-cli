@@ -22,8 +22,8 @@ These tasks have no external-facing behavior -- they're the skeleton everything 
 
 The two commands that cover 80% of use cases. T05 (`frames`) feeds into T06 (`export`).
 
-- [ ] [T05 - `figma frames` Command](tasks/T05-frames-command.md)
-- [ ] [T06 - `figma export` Command](tasks/T06-export-command.md)
+- [x] [T05 - `figma frames` Command](tasks/done/T05-frames-command.md)
+- [x] [T06 - `figma export` Command](tasks/done/T06-export-command.md)
 
 ---
 
@@ -31,7 +31,7 @@ The two commands that cover 80% of use cases. T05 (`frames`) feeds into T06 (`ex
 
 Round out the read-only API surface. T08 (output formatting) can be done alongside any Phase 2/3 task.
 
-- [ ] [T07 - `figma file` Command](tasks/T07-file-command.md)
+- [x] [T07 - `figma file` Command](tasks/done/T07-file-command.md)
 - [x] [T08 - Output Formatting & Global Flags](tasks/done/T08-output-formatting.md)
 
 ---

@@ -37,12 +37,26 @@ figma file <url> --pretty  # Human-readable format
 ```sh
 figma frames <url>          # List FRAME nodes in a page, section, or frame
 figma frames <url> --deep   # Include nested frames recursively
-figma frames <url> --pretty # Table: ID | Name | Size
+figma frames <url> --pretty # Hierarchical: sections as headers, frames indented below
 ```
 
-Output:
+Output is a nested tree -- sections/groups become container nodes with `children`:
 ```json
-[{ "id": "435:53583", "name": "Insights", "width": 1440, "height": 900 }]
+[
+  {
+    "id": "322:33631", "name": "Section 3", "type": "SECTION",
+    "width": 0, "height": 0,
+    "children": [
+      { "id": "322:33632", "name": "Video Studio", "type": "FRAME", "width": 1728, "height": 1117 }
+    ]
+  },
+  { "id": "2:8272", "name": "Insights", "type": "FRAME", "width": 1440, "height": 900 }
+]
+```
+
+Point to a section URL to get a flat list of just that section's frames:
+```sh
+figma frames "https://figma.com/design/:key/:name?node-id=322-33631"
 ```
 
 ### Export
@@ -116,11 +130,14 @@ Errors always go to stderr. Exit 0 on success, 1 on error.
 ## Composing with jq
 
 ```sh
-# Get all frame IDs from a section
-figma frames <url> | jq '.[].id'
+# Get all frame IDs from a section URL (flat output)
+figma frames <section-url> | jq '.[].id'
 
-# Export only frames wider than 1000px
-figma frames <url> | jq '[.[] | select(.width > 1000) | .id] | join(",")'
+# Get all frame IDs from a page (hierarchical -- recurse through sections)
+figma frames <page-url> | jq '[.. | objects | select(.type == "FRAME") | .id]'
+
+# Export only frames wider than 1000px (from a flat section)
+figma frames <section-url> | jq '[.[] | select(.width > 1000) | .id] | join(",")'
 
 # Count unresolved comments
 figma comments <url> | jq '[.[] | select(.resolved == false)] | length'

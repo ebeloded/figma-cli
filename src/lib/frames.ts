@@ -3,8 +3,10 @@ import { figmaFetch } from "./api-client.ts";
 export interface FrameInfo {
   id: string;
   name: string;
+  type: string;
   width: number;
   height: number;
+  children?: FrameInfo[];
 }
 
 interface FigmaNode {
@@ -35,44 +37,39 @@ interface FileResponse {
   };
 }
 
-function collectFrames(node: FigmaNode, deep: boolean): FrameInfo[] {
-  const frames: FrameInfo[] = [];
+function collectChildren(node: FigmaNode, deep: boolean): FrameInfo[] {
+  const results: FrameInfo[] = [];
 
-  if (node.type === "FRAME" || node.type === "COMPONENT") {
-    frames.push({
-      id: node.id,
-      name: node.name,
-      width: node.absoluteBoundingBox?.width ?? 0,
-      height: node.absoluteBoundingBox?.height ?? 0,
-    });
-    if (!deep) return frames;
-  }
-
-  if (node.children) {
-    for (const child of node.children) {
-      if (child.type === "FRAME" || child.type === "COMPONENT") {
-        frames.push({
+  for (const child of node.children ?? []) {
+    if (child.type === "FRAME" || child.type === "COMPONENT") {
+      const frame: FrameInfo = {
+        id: child.id,
+        name: child.name,
+        type: child.type,
+        width: child.absoluteBoundingBox?.width ?? 0,
+        height: child.absoluteBoundingBox?.height ?? 0,
+      };
+      if (deep) {
+        const nested = collectChildren(child, true);
+        if (nested.length > 0) frame.children = nested;
+      }
+      results.push(frame);
+    } else if (child.type === "SECTION" || child.type === "GROUP") {
+      const children = collectChildren(child, deep);
+      if (children.length > 0) {
+        results.push({
           id: child.id,
           name: child.name,
+          type: child.type,
           width: child.absoluteBoundingBox?.width ?? 0,
           height: child.absoluteBoundingBox?.height ?? 0,
+          children,
         });
-        if (deep && child.children) {
-          for (const nested of child.children) {
-            frames.push(...collectFrames(nested, true));
-          }
-        }
-      } else if (
-        child.type === "SECTION" ||
-        child.type === "GROUP" ||
-        child.type === "CANVAS"
-      ) {
-        frames.push(...collectFrames(child, deep));
       }
     }
   }
 
-  return frames;
+  return results;
 }
 
 export async function discoverFrames(
@@ -90,16 +87,32 @@ export async function discoverFrames(
       throw new Error(`Node ${nodeId} not found in file`);
     }
     const doc = entry.document;
-    return collectFrames(doc, deep);
+
+    if (doc.type === "FRAME" || doc.type === "COMPONENT") {
+      const frame: FrameInfo = {
+        id: doc.id,
+        name: doc.name,
+        type: doc.type,
+        width: doc.absoluteBoundingBox?.width ?? 0,
+        height: doc.absoluteBoundingBox?.height ?? 0,
+      };
+      if (deep) {
+        const nested = collectChildren(doc, true);
+        if (nested.length > 0) frame.children = nested;
+      }
+      return [frame];
+    }
+
+    return collectChildren(doc, deep);
   }
 
-  // No nodeId -- get top-level pages with depth=2
+  // No nodeId -- get top-level pages with depth=3 to include section contents
   const data = await figmaFetch<FileResponse>(`/v1/files/${fileKey}`, {
-    depth: "2",
+    depth: "3",
   });
   const frames: FrameInfo[] = [];
   for (const page of data.document.children) {
-    frames.push(...collectFrames(page, deep));
+    frames.push(...collectChildren(page, deep));
   }
   return frames;
 }

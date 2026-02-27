@@ -37,7 +37,8 @@ figma auth clear           # Remove stored token
 
 ```sh
 figma file <url>           # File name, last modified, pages
-figma frames <url>         # List frames in a page, section, or frame
+figma frames <url>         # List frames in a page, section, or frame (sections shown as hierarchy)
+figma frames <url> --deep  # Include nested frames recursively
 figma versions <url>       # File version history
 ```
 

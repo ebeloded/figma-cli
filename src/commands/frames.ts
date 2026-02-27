@@ -1,12 +1,25 @@
 import { defineCommand } from "citty";
+import pc from "picocolors";
 import { parseFigmaUrl } from "../lib/url-parser.ts";
-import { discoverFrames } from "../lib/frames.ts";
-import {
-  isPretty,
-  printJSON,
-  printTable,
-  printError,
-} from "../lib/output.ts";
+import { discoverFrames, type FrameInfo } from "../lib/frames.ts";
+import { isPretty, printJSON, printError } from "../lib/output.ts";
+
+function printFrameTree(frames: FrameInfo[], indent = 0) {
+  const pad = "  ".repeat(indent);
+  for (const frame of frames) {
+    if (frame.type === "SECTION" || frame.type === "GROUP") {
+      console.log(`\n${pad}${pc.bold(frame.name)}`);
+      if (frame.children?.length) {
+        printFrameTree(frame.children, indent + 1);
+      }
+    } else {
+      const size = `${frame.width} x ${frame.height}`;
+      console.log(
+        `${pad}${pc.dim(frame.id.padEnd(12))}  ${frame.name.padEnd(32)}  ${size}`
+      );
+    }
+  }
+}
 
 export default defineCommand({
   meta: {
@@ -36,19 +49,9 @@ export default defineCommand({
       }
 
       if (isPretty()) {
-        printTable(
-          ["ID", "Name", "Size"],
-          frames.map((f) => [f.id, f.name, `${f.width} x ${f.height}`])
-        );
+        printFrameTree(frames);
       } else {
-        printJSON(
-          frames.map((f) => ({
-            id: f.id,
-            name: f.name,
-            width: f.width,
-            height: f.height,
-          }))
-        );
+        printJSON(frames);
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);

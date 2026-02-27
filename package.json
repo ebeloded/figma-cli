@@ -1,12 +1,27 @@
 {
   "name": "figma-cli",
+  "version": "0.1.0",
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "bin": {
+    "figma": "./src/cli.ts"
+  },
+  "scripts": {
+    "cli": "bun src/cli.ts",
+    "build": "bun build --compile ./src/cli.ts --outfile ./bin/figma",
+    "test": "bun test"
+  },
   "devDependencies": {
+    "@figma/rest-api-spec": "^0.36.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.0.1",
+    "citty": "^0.2.1",
+    "picocolors": "^1.1.1"
   }
 }

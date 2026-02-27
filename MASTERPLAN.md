@@ -11,10 +11,10 @@
 
 These tasks have no external-facing behavior -- they're the skeleton everything else attaches to. Do them in order.
 
-- [ ] [T01 - Project Structure & CLI Entry Point](tasks/T01-project-structure.md)
-- [ ] [T02 - Auth & Config Management](tasks/T02-auth.md)
-- [ ] [T03 - Figma URL Parser](tasks/T03-url-parser.md)
-- [ ] [T04 - API Client Module](tasks/T04-api-client.md)
+- [x] [T01 - Project Structure & CLI Entry Point](tasks/done/T01-project-structure.md)
+- [x] [T02 - Auth & Config Management](tasks/done/T02-auth.md)
+- [x] [T03 - Figma URL Parser](tasks/done/T03-url-parser.md)
+- [x] [T04 - API Client Module](tasks/done/T04-api-client.md)
 
 ---
 
@@ -32,7 +32,7 @@ The two commands that cover 80% of use cases. T05 (`frames`) feeds into T06 (`ex
 Round out the read-only API surface. T08 (output formatting) can be done alongside any Phase 2/3 task.
 
 - [ ] [T07 - `figma file` Command](tasks/T07-file-command.md)
-- [ ] [T08 - Output Formatting & Global Flags](tasks/T08-output-formatting.md)
+- [x] [T08 - Output Formatting & Global Flags](tasks/done/T08-output-formatting.md)
 
 ---
 

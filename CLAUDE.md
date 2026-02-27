@@ -1,0 +1,7 @@
+@IDEA.md
+
+@MASTERPLAN.md
+
+@README.md
+
+@AGENTS.md

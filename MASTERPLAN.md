@@ -40,11 +40,11 @@ Round out the read-only API surface. T08 (output formatting) can be done alongsi
 
 Non-critical but high-value. Order within this phase is flexible.
 
-- [ ] [T09 - `figma comments` Command](tasks/T09-comments-command.md)
-- [ ] [T10 - `figma variables` Command](tasks/T10-variables-command.md)
-- [ ] [T11 - `figma components` Command](tasks/T11-components-command.md)
-- [ ] [T12 - `figma versions` Command](tasks/T12-versions-command.md)
-- [ ] [T13 - `figma projects` Command](tasks/T13-projects-command.md)
+- [x] [T09 - `figma comments` Command](tasks/done/T09-comments-command.md)
+- [x] [T10 - `figma variables` Command](tasks/done/T10-variables-command.md)
+- [x] [T11 - `figma components` Command](tasks/done/T11-components-command.md)
+- [x] [T12 - `figma versions` Command](tasks/done/T12-versions-command.md)
+- [x] [T13 - `figma projects` Command](tasks/done/T13-projects-command.md)
 
 ---
 

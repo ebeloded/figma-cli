@@ -63,3 +63,56 @@ export async function figmaFetch<T>(
 
   return (await res.json()) as T;
 }
+
+export async function figmaPost<T>(
+  path: string,
+  body: unknown
+): Promise<T> {
+  const token = await getToken();
+  if (!token) {
+    throw new FigmaApiError(
+      "Not authenticated. Run `figma auth set <token>`"
+    );
+  }
+
+  const url = `${BASE_URL}${path}`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "X-Figma-Token": token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    switch (res.status) {
+      case 401:
+        throw new FigmaApiError(
+          "Invalid token. Run `figma auth set <token>`",
+          401
+        );
+      case 404:
+        throw new FigmaApiError(`Not found: ${path}`, 404);
+      case 429:
+        throw new FigmaApiError(
+          "Rate limit exceeded. Figma allows 15 requests/min.",
+          429
+        );
+      default: {
+        let message = `Figma API error: ${res.status} ${res.statusText}`;
+        try {
+          const body = (await res.json()) as { message?: string; err?: string };
+          if (body.message) message = body.message;
+          else if (body.err) message = body.err;
+        } catch {
+          // ignore parse errors, use default message
+        }
+        throw new FigmaApiError(message, res.status);
+      }
+    }
+  }
+
+  return (await res.json()) as T;
+}

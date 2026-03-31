@@ -1,16 +1,33 @@
 {
   "name": "figma-cli",
   "version": "0.1.0",
-  "module": "index.ts",
+  "description": "Scriptable CLI for the Figma REST API. Like gh for GitHub, but for Figma.",
   "type": "module",
-  "private": true,
   "bin": {
     "figma": "./src/cli.ts"
   },
+  "files": [
+    "src",
+    "bin",
+    "LICENSE"
+  ],
   "scripts": {
     "cli": "bun src/cli.ts",
     "build": "bun build --compile ./src/cli.ts --outfile ./bin/figma",
     "test": "bun test"
+  },
+  "keywords": [
+    "figma",
+    "cli",
+    "design",
+    "api",
+    "export",
+    "design-tokens"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ebeloded/figma-cli"
   },
   "devDependencies": {
     "@figma/rest-api-spec": "^0.36.0",

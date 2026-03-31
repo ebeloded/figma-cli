@@ -6,22 +6,31 @@ Accepts Figma URLs directly. Outputs JSON by default (pipeable to `jq`). Use `--
 
 ## Install
 
-**Development (via Bun link):**
-
 ```sh
+# From source (requires Bun)
 bun install
 bun link
-figma --help
+
+# Compiled binary (no Bun required at runtime)
+bun run build
+./bin/figma --help
 ```
 
-**Compiled binary:**
+## Quick Start
 
 ```sh
-bun run build          # produces ./bin/figma
-./bin/figma --help     # works without Bun installed
-```
+# Store your Figma personal access token
+figma auth set <token>
 
-Add `./bin/figma` to your PATH for global access.
+# Inspect a file
+figma file <figma-url>
+
+# List frames
+figma frames <figma-url>
+
+# Export frames as PNGs
+figma export <figma-url> --format png --scale 2 --out ./assets
+```
 
 ## Auth
 
@@ -31,13 +40,15 @@ figma auth status          # Verify token and show user info
 figma auth clear           # Remove stored token
 ```
 
+Get a personal access token from [Figma Settings > Personal access tokens](https://www.figma.com/developers/api#access-tokens).
+
 ## Commands
 
-### File inspection
+### File Inspection
 
 ```sh
 figma file <url>           # File name, last modified, pages
-figma frames <url>         # List frames in a page, section, or frame (sections shown as hierarchy)
+figma frames <url>         # List frames in a page, section, or frame
 figma frames <url> --deep  # Include nested frames recursively
 figma versions <url>       # File version history
 ```
@@ -45,19 +56,24 @@ figma versions <url>       # File version history
 ### Export
 
 ```sh
-figma export <url>         # Export frames to image files
-  --format png|jpg|svg|pdf   (default: png)
-  --scale 1|2|3              (default: 1)
-  --out <dir>                (default: ./exports)
+figma export <url>                          # Export frames as PNG
+figma export <url> --format svg --scale 2   # SVG at 2x
+figma export <url> --out ./assets           # Custom output directory
 ```
+
+| Flag | Default | Options |
+|------|---------|---------|
+| `--format` | `png` | `png`, `jpg`, `svg`, `pdf` |
+| `--scale` | `1` | `1`, `2`, `3` |
+| `--out` | `./exports` | Any directory path |
 
 ### Content
 
 ```sh
-figma comments <url>       # List comments on a file or node
+figma comments <url>                        # List comments
 figma comments post <url> --message "..."   # Post a comment
-figma variables <url>      # Dump design token variable collections
-figma components <url>     # List published components and styles
+figma variables <url>                       # Design token variable collections
+figma components <url>                      # Published components and styles
 ```
 
 ### Team & Projects
@@ -74,6 +90,19 @@ figma projects <team-id>   # List team projects and their files
 | `--json` | Force JSON output (default) |
 | `--no-color` | Disable color output |
 
+## Agent / CI Usage
+
+Every command outputs structured JSON by default, making it easy to use in scripts and CI pipelines:
+
+```sh
+# Get frame IDs, then export specific ones
+figma frames <url> | jq '.[].id'
+figma export <frame-url> --format png --out ./assets
+
+# Dump design tokens for diffing
+figma variables <url> > tokens.json
+```
+
 ## Development
 
 ```sh
@@ -83,16 +112,6 @@ bun run cli -- <args>      # Run without compiling
 bun run build              # Compile to ./bin/figma
 ```
 
-## Project Structure
+## License
 
-```
-src/
-  cli.ts              # Entry point (citty)
-  commands/           # One file per command
-  lib/
-    config.ts         # Token storage (~/.config/figma-cli/config.json)
-    url-parser.ts     # Figma URL -> { fileKey, nodeId }
-    api-client.ts     # Typed fetch wrapper for Figma REST API
-    output.ts         # JSON/pretty output, error formatting
-    frames.ts         # Shared frame discovery logic
-```
+MIT

@@ -1,14 +1,14 @@
 {
-  "name": "figma-cli",
-  "version": "0.1.0",
+  "name": "@ebeloded/figma-cli",
+  "version": "0.1.1",
   "description": "Scriptable CLI for the Figma REST API. Like gh for GitHub, but for Figma.",
   "type": "module",
   "bin": {
-    "figma": "./src/cli.ts"
+    "figma": "./bin/figma.js"
   },
   "files": [
     "src",
-    "bin",
+    "bin/figma.js",
     "LICENSE"
   ],
   "scripts": {

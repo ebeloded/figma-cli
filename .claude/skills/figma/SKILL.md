@@ -5,7 +5,7 @@ description: Use the figma CLI to interact with Figma files, frames, exports, co
 
 # figma CLI
 
-A scriptable CLI for the Figma REST API. Already installed and authenticated globally via `bun link`.
+A scriptable CLI for the Figma REST API. Install globally with `bun install -g @ebeloded/figma-cli`.
 
 ## Key facts
 

@@ -4,7 +4,8 @@ node_modules
 # output
 out
 dist
-bin/
+bin/figma
+!bin/figma.js
 *.tgz
 exports/
 

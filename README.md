@@ -7,13 +7,17 @@ Accepts Figma URLs directly. Outputs JSON by default (pipeable to `jq`). Use `--
 ## Install
 
 ```sh
-# From source (requires Bun)
-bun install
-bun link
+bun install -g @ebeloded/figma-cli
+```
 
-# Compiled binary (no Bun required at runtime)
-bun run build
-./bin/figma --help
+Requires [Bun](https://bun.sh) to be installed.
+
+**From source:**
+
+```sh
+git clone https://github.com/ebeloded/figma-cli.git
+cd figma-cli
+bun install && bun link
 ```
 
 ## Quick Start
@@ -102,6 +106,16 @@ figma export <frame-url> --format png --out ./assets
 # Dump design tokens for diffing
 figma variables <url> > tokens.json
 ```
+
+## Claude Code Skill
+
+This package includes a [Claude Code skill](https://docs.anthropic.com/en/docs/claude-code/skills) that teaches Claude how to use the figma CLI:
+
+```sh
+bunx skills add ebeloded/figma-cli
+```
+
+Once installed, Claude Code can use `figma` commands directly when you ask it to interact with Figma files.
 
 ## Development
 
